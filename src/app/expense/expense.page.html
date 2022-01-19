@@ -1,0 +1,91 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-icon (click)="isPopoverOpen = true" size="large"  name="add-outline"> </ion-icon> &nbsp;&nbsp;
+      <ion-button (click)="AddOrSubractDays(fromDate,toDate, 'sub')" >
+    <ion-icon name="chevron-back-outline" ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="primary">
+      <ion-button (click)="AddOrSubractDays(fromDate,toDate,'add')">
+        <ion-icon name="chevron-forward-outline"   class="ion-float-right"></ion-icon> &nbsp;&nbsp;&nbsp;
+      </ion-button>
+      <ion-icon [routerLink]="['/home']" size="large" routerLinkActive="router-link-active"  name="calendar-outline" class="ion-float-right"></ion-icon>
+    </ion-buttons>
+    <ion-title>
+     <h6> {{fromDate | date : 'mediumDate'}}  - {{toDate | date : 'mediumDate'}} </h6>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-popover backdropDismiss='false' [isOpen]="isPopoverOpen" side="right" alignment="start">
+    <ng-template>
+      <ion-content>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Add/Edit Expense  <ion-icon (click)="cleanExit()"  class="ion-float-right" name="close-outline"></ion-icon></ion-card-title>
+            
+          </ion-card-header>
+          <ion-card-content>
+            <form >
+              <ion-item>
+                <ion-label>Date</ion-label>
+                <ion-datetime presentation="date" [(ngModel)]="data.date"  name="date" required=""></ion-datetime>
+              </ion-item>
+              <ion-item>
+                <ion-label>Type</ion-label>
+                <ion-select interface="popover" name="type" [(ngModel)]="data.type" required="">
+                  <ion-select-option value="1">Grocery</ion-select-option>
+                  <ion-select-option value="2">Clothes</ion-select-option>
+                  <ion-select-option value="3">Health</ion-select-option>
+                  <ion-select-option value="4">Travelings</ion-select-option>
+                  <ion-select-option value="5">Bills</ion-select-option>
+                  <ion-select-option value="6">Rents</ion-select-option>
+                  <ion-select-option value="7">Meals</ion-select-option>
+                  <ion-select-option value="8">Stationary</ion-select-option>
+                  <ion-select-option value="9">Repair</ion-select-option>
+                  <ion-select-option value="10">Other</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-label>Description</ion-label>
+                <ion-input type="text" placeholder="Description" [(ngModel)]="data.description" name="description" required="" ></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label>Amount</ion-label>
+                <ion-input type="number" placeholder="Amount" [(ngModel)]="data.amount" name="amount" required="" ></ion-input>
+              </ion-item>
+              <ion-button  (click)="saveData()" *ngIf="alreadyId.length == 0" id="dismiss-button" [disabled]="data.type.length === 0 || data.amount.length === 0" ion-button type="submit" block>Save Data</ion-button>
+              <ion-button  (click)="editItem()" *ngIf="alreadyId.length !== 0"  id="dismiss-button" [disabled]="data.type.length === 0 || data.amount.length === 0"  ion-button type="submit" block>Edit Data</ion-button>
+            </form>
+          </ion-card-content>
+        </ion-card>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+  <ion-card>
+    <ion-item>
+      <ion-label><b> Total Expense:</b> {{totalIncome}}</ion-label>
+    </ion-item>
+    <ion-card-content *ngIf="myItems.length > 2">
+     <b>Average Daily Expense </b> : {{AverageDailyExpense}}
+    </ion-card-content>
+  </ion-card>
+  <ion-list *ngFor="let item of myItems">
+    <ion-item-sliding>
+      <ion-item>
+        <ion-label>
+          <h2>{{item.description}}</h2>
+          <p> {{item.date | date : 'mediumDate'}}</p>
+        </ion-label>
+          <ion-icon slot="end" [style.color]="colorPicker(item.type)" [name]="iconGet(item.type)"></ion-icon>
+        <h5 slot="end"> {{item.amount}} ₹</h5>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option (click) ="editItemPopup(item)"><ion-icon name="create-outline"></ion-icon></ion-item-option>
+        <ion-item-option color="danger" (click) ="deleteItem(item.id)"><ion-icon name="trash-outline"></ion-icon></ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  
+</ion-content>

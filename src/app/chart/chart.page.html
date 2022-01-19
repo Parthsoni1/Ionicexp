@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-item slot="start">
+      <ion-select class="ion-float-right" (ionChange)="selectRangeDate()" [(ngModel)]="selectedDate"
+        interface="popover">
+        <ion-select-option value="1">This Week</ion-select-option>
+        <ion-select-option value="2">Last Week</ion-select-option>
+        <ion-select-option value="3">This Month</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-icon (click)="isPopoverOpen = true" name="calendar-outline" slot="end" size="large" class="ion-float-right"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <ion-popover backdropDismiss='false' [isOpen]="isPopoverOpen" side="right" alignment="start">
+    <ng-template>
+      <ion-content>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Calendar <ion-icon (click)="isPopoverOpen = false" class="ion-float-right" name="close-outline">
+              </ion-icon>
+            </ion-card-title>
+
+          </ion-card-header>
+          <ion-card-content>
+
+            <ion-calendar [(ngModel)]="dateRange" [options]="optionsRange" (change)="onChange($event)" [type]="type"
+              [format]="'YYYY-MM-DD'">
+            </ion-calendar>
+          </ion-card-content>
+        </ion-card>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+
+  <ion-card class="welcome-card">
+    <ion-card-header>
+      <ion-card-subtitle>Number of Expense</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <canvas #barChart width="400" height="550"></canvas>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
